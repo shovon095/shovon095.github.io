@@ -19,7 +19,6 @@ import {
   FlaskConical,
   Presentation,
   MapPin,
-  Phone,
   FileText,
   ExternalLink,
   Download,
@@ -37,13 +36,11 @@ const profile = {
   title: "PhD Candidate in Electrical Engineering",
   org: "Prairie View A&M University (PVAMU)",
   address: "702 Santee Street, Prairie View, TX 77445",
-  phone: "(337) 419-4543",
   email: "shouvonsarker@gmail.com",
   linkedin: "https://www.linkedin.com/in/shouvon-sarker",
   github: "https://github.com/shovon095",
   photo: profilePic,
 
-  // Less vague + more CV-aligned: specific themes + contributions
   bio:
     "I develop trustworthy AI systems for mission-critical domains, with a focus on Large Language Models (LLMs), neuro-symbolic Text-to-SQL, and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, and policy optimization to improve structured generation, and I design interpretable distillation methods for reliable clinical extraction.",
 };
@@ -103,7 +100,8 @@ const publicationsByCategory = {
         id: 1,
         title:
           "From Tokens to Transitions: A Structured Jensen–Shannon Knowledge Distillation Method for NER",
-        venue: "Submitted to IEEE Transactions on Knowledge and Data Engineering (TKDE), 2025",
+        venue:
+          "Submitted to IEEE Transactions on Knowledge and Data Engineering (TKDE), 2025",
       },
       {
         id: 2,
@@ -291,9 +289,6 @@ export default function App() {
                 <span className="inline-flex items-center gap-2">
                   <MapPin size={14} className="text-slate-400" /> {profile.address}
                 </span>
-                <span className="inline-flex items-center gap-2">
-                  <Phone size={14} className="text-slate-400" /> {profile.phone}
-                </span>
               </div>
             </div>
 
@@ -361,10 +356,6 @@ function Home() {
               <Mail size={14} className="text-slate-400" />
               {profile.email}
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-slate-100 shadow-sm">
-              <Phone size={14} className="text-slate-400" />
-              {profile.phone}
-            </span>
           </div>
         </div>
       </section>
@@ -421,7 +412,6 @@ function Home() {
 }
 
 function Research() {
-  // Replaced vague area descriptions + added measured improvements
   const areas = [
     {
       title: "Trustworthy AI (XAI)",
@@ -467,7 +457,9 @@ function Research() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         <div className="space-y-4">
-          <SectionTitle icon={<BrainCircuit size={16} className="text-indigo-600" />}>
+          <SectionTitle
+            icon={<BrainCircuit size={16} className="text-indigo-600" />}
+          >
             Core Focus Areas
           </SectionTitle>
 
@@ -504,10 +496,22 @@ function Research() {
           </SectionTitle>
 
           <div className="grid grid-cols-2 gap-4">
-            <SkillBox cat="Languages" items={["Python (Advanced)", "C/C++", "SQL", "MATLAB", "PHP", "HTML/CSS"]} />
-            <SkillBox cat="Deep Learning" items={["PyTorch", "TensorFlow", "Keras", "Hugging Face Transformers"]} />
-            <SkillBox cat="LLM Tools" items={["LoRA", "Adapters", "PEFT", "OpenAI API", "LangChain"]} />
-            <SkillBox cat="Data Science" items={["Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn"]} />
+            <SkillBox
+              cat="Languages"
+              items={["Python (Advanced)", "C/C++", "SQL", "MATLAB", "PHP", "HTML/CSS"]}
+            />
+            <SkillBox
+              cat="Deep Learning"
+              items={["PyTorch", "TensorFlow", "Keras", "Hugging Face Transformers"]}
+            />
+            <SkillBox
+              cat="LLM Tools"
+              items={["LoRA", "Adapters", "PEFT", "OpenAI API", "LangChain"]}
+            />
+            <SkillBox
+              cat="Data Science"
+              items={["Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn"]}
+            />
             <SkillBox cat="Databases" items={["MySQL", "PostgreSQL", "SQLite"]} />
             <SkillBox cat="Deployment" items={["Git", "Docker", "Linux", "AWS"]} />
           </div>
@@ -577,7 +581,6 @@ function PublicationsPage() {
 }
 
 function Experience() {
-  // Expanded with CV content and made descriptions concrete
   const jobs = [
     {
       title: "Graduate Research Assistant",
@@ -657,7 +660,10 @@ function Experience() {
 
             <ul className="mt-4 space-y-2">
               {j.bullets.map((b, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 font-medium leading-relaxed">
+                <li
+                  key={idx}
+                  className="flex items-start gap-2 text-sm text-slate-600 font-medium leading-relaxed"
+                >
                   <ChevronDot /> {b}
                 </li>
               ))}
