@@ -23,8 +23,8 @@ import profilePic from "./assets/shouvon.jpg";
 /**
  * Comprehensive single-file App.jsx
  * - Multi-page routing (HashRouter for GitHub Pages safety)
- * - Less pink, academic palette (indigo/blue/slate/emerald)
- * - Smaller headers
+ * - Light-only theme
+ * - Smaller headlines + section typography
  * - Reusable components
  * - Your photo in SS-style frame
  */
@@ -78,10 +78,26 @@ const researchAreas = [
 ];
 
 const skills = [
-  { title: "Programming", items: ["Python", "C/C++", "SQL", "MATLAB"], accent: "from-blue-600 to-cyan-600" },
-  { title: "Machine Learning", items: ["PyTorch", "TensorFlow", "Hugging Face", "Scikit-learn"], accent: "from-indigo-600 to-blue-600" },
-  { title: "LLM Tech", items: ["PEFT", "LoRA", "LangChain", "OpenAI API"], accent: "from-emerald-600 to-teal-600" },
-  { title: "Infrastructure", items: ["Linux", "Docker", "AWS", "MySQL", "PostgreSQL"], accent: "from-slate-700 to-slate-900" },
+  {
+    title: "Programming",
+    items: ["Python", "C/C++", "SQL", "MATLAB"],
+    accent: "from-blue-600 to-cyan-600",
+  },
+  {
+    title: "Machine Learning",
+    items: ["PyTorch", "TensorFlow", "Hugging Face", "Scikit-learn"],
+    accent: "from-indigo-600 to-blue-600",
+  },
+  {
+    title: "LLM Tech",
+    items: ["PEFT", "LoRA", "LangChain", "OpenAI API"],
+    accent: "from-emerald-600 to-teal-600",
+  },
+  {
+    title: "Infrastructure",
+    items: ["Linux", "Docker", "AWS", "MySQL", "PostgreSQL"],
+    accent: "from-slate-700 to-slate-900",
+  },
 ];
 
 const publications = {
@@ -133,6 +149,27 @@ const publications = {
       authors: "Sarker, S., Li, X., and Dong, X.",
       accent: "from-slate-600 to-slate-800",
     },
+	      {
+      id: "7",
+      title: "Ensemble BERT for Medication Event Classification on Electronic Health Records",
+      venue: "ICIBM, 2023",
+      authors: "Sarker, S., Qian, L., and Dong, X.",
+      accent: "from-emerald-600 to-slate-800",
+    },
+	     {
+      id: "8",
+      title: "Enhancing Deep Knowledge Tracing via Diffusion Models for Personalized Adaptive Learning",
+      venue: "ASEE, 2024",
+      authors: "Kuo, M., Sarker, S., Qian, L., et al.",
+      accent: "from-emerald-600 to-teal-800",
+    },
+	   {
+      id: "9",
+      title: "Integrating Human-in-the-loop into Swarm Learning for Decentralized Fake News Detection",
+      venue: "IDSTA, 2022",
+      authors: "Dong, X., Sarker, S., Qian, L.",
+      accent: "from-emerald-600 to-slate-800",
+    }
   ],
 };
 
@@ -158,12 +195,24 @@ const projects = [
 ];
 
 const education = [
-  { degree: "PhD in Electrical Engineering", period: "2023 – Present", org: "Prairie View A&M University, USA", gpa: "4.0 / 4.0", active: true },
-  { degree: "MS in Electrical Engineering", period: "2021 – 2022", org: "Prairie View A&M University, USA", gpa: "3.9 / 4.0", active: false },
+  {
+    degree: "PhD in Electrical Engineering",
+    period: "2023 – Present",
+    org: "Prairie View A&M University, USA",
+    gpa: "4.0 / 4.0",
+    active: true,
+  },
+  {
+    degree: "MS in Electrical Engineering",
+    period: "2021 – 2022",
+    org: "Prairie View A&M University, USA",
+    gpa: "3.9 / 4.0",
+    active: false,
+  },
 ];
 
 export default function App() {
-  // Optional: lightweight theme toggle without extra deps
+  // Optional: lightweight spacing toggle without extra deps
   const [compact, setCompact] = useState(false);
 
   const containerPadding = compact ? "py-8" : "py-10";
@@ -171,7 +220,8 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-sky-50 text-slate-900">
+      {/* Light-only theme + slightly smaller base typography */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-sky-50 text-slate-900 text-[15px] md:text-[16px]">
         <TopNav compact={compact} setCompact={setCompact} />
 
         <main className={`max-w-6xl mx-auto px-6 ${containerPadding}`}>
@@ -205,8 +255,10 @@ function TopNav({ compact, setCompact }) {
             S
           </div>
           <div className="leading-tight">
-            <div className="font-black text-lg text-slate-900">Shouvon</div>
-            <div className="text-xs text-slate-500 hidden sm:block">{profile.title}</div>
+            <div className="font-black text-base text-slate-900">Shouvon</div>
+            <div className="text-[11px] text-slate-500 hidden sm:block">
+              {profile.title}
+            </div>
           </div>
         </NavLink>
 
@@ -247,20 +299,33 @@ function TopNav({ compact, setCompact }) {
 
 function Footer() {
   return (
-    <footer className="mt-14 py-10 bg-slate-900 text-white">
+    // Light-only footer
+    <footer className="mt-14 py-10 bg-white/80 backdrop-blur border-t border-slate-200">
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
-          <p className="font-black text-base">{profile.name}</p>
-          <p className="text-sm text-slate-300">{profile.tagline}</p>
+          <p className="font-black text-base text-slate-900">{profile.name}</p>
+          <p className="text-sm text-slate-600">{profile.tagline}</p>
         </div>
 
         <div className="flex gap-3">
-          <IconButton href={`mailto:${profile.email}`} label="Email" icon={<Mail size={18} />} />
-          <IconButton href={profile.linkedin} label="LinkedIn" icon={<Linkedin size={18} />} />
-          <IconButton href={profile.github} label="GitHub" icon={<Github size={18} />} />
+          <IconButton
+            href={`mailto:${profile.email}`}
+            label="Email"
+            icon={<Mail size={18} />}
+          />
+          <IconButton
+            href={profile.linkedin}
+            label="LinkedIn"
+            icon={<Linkedin size={18} />}
+          />
+          <IconButton
+            href={profile.github}
+            label="GitHub"
+            icon={<Github size={18} />}
+          />
         </div>
 
-        <p className="text-xs text-slate-400">© 2026 • Built with React, Vite & Tailwind</p>
+        <p className="text-xs text-slate-500">© 2026 • Built with React, Vite & Tailwind</p>
       </div>
     </footer>
   );
@@ -277,15 +342,17 @@ function Home() {
         <SSFrame photo={profile.photo} alt={profile.name} />
 
         <div className="text-center lg:text-left">
-          <p className="inline-flex items-center gap-2 text-xs font-black tracking-widest uppercase px-3 py-1 rounded-full bg-indigo-700 text-white">
+          <p className="inline-flex items-center gap-2 text-[11px] font-black tracking-widest uppercase px-3 py-1 rounded-full bg-indigo-700 text-white">
             <School size={14} /> PhD Candidate @ PVAMU
           </p>
 
-          <h1 className="mt-4 text-4xl md:text-5xl font-black text-slate-900">
+          {/* Smaller hero name */}
+          <h1 className="mt-4 text-3xl md:text-4xl font-black text-slate-900">
             {profile.name}
           </h1>
 
-          <p className="mt-3 text-lg md:text-xl font-semibold text-slate-700 max-w-2xl">
+          {/* Slightly smaller tagline */}
+          <p className="mt-3 text-base md:text-lg font-semibold text-slate-700 max-w-2xl">
             Developing{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-600">
               transparent, trustworthy, and reliable
@@ -343,30 +410,33 @@ function Home() {
         />
       </section>
 
-      <section className="bg-gradient-to-br from-indigo-900 via-blue-800 to-sky-700 rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-          <Award size={220} />
+      {/* Light-only Latest News section */}
+      <section className="bg-white rounded-3xl p-10 shadow-xl border border-slate-200">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-700 border border-indigo-100">
+            <Sparkles size={18} />
+          </div>
+          <div>
+            <h2 className="text-xl md:text-2xl font-black text-slate-900">Latest News</h2>
+            <p className="text-sm text-slate-600 font-medium">Recent milestones and updates</p>
+          </div>
         </div>
 
-        <div className="relative">
-          <h2 className="text-3xl md:text-4xl font-black flex items-center gap-3">
-            <Sparkles size={22} fill="white" /> Latest News
-          </h2>
-
-          <div className="mt-6 space-y-4">
-            <NewsCard
-              date="Sept 2025"
-              title="ICDM 2025 Acceptance"
-              desc="Paper accepted at IEEE International Conference on Data Mining."
-              tagColor="bg-amber-300"
-            />
-            <NewsCard
-              date="Aug 2024"
-              title="NIST GenAI Challenge Finalist"
-              desc="Generator–detector framework ranked in Top 10% for trustworthiness."
-              tagColor="bg-cyan-300"
-            />
-          </div>
+        <div className="mt-6 space-y-4">
+          <NewsCard
+            date="Sept 2025"
+            title="ICDM 2025 Acceptance"
+            desc="Paper accepted at IEEE International Conference on Data Mining."
+            tagColor="bg-amber-200"
+            light
+          />
+          <NewsCard
+            date="Aug 2024"
+            title="NIST GenAI Challenge Finalist"
+            desc="Generator–detector framework ranked in Top 10% for trustworthiness."
+            tagColor="bg-cyan-200"
+            light
+          />
         </div>
       </section>
     </div>
@@ -377,7 +447,7 @@ function Research() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={<BrainCircuit size={28} />}
+        icon={<BrainCircuit size={24} />}
         title="Research & Expertise"
         subtitle="Core areas and technical strengths"
         accent="from-indigo-700 to-blue-700"
@@ -408,7 +478,7 @@ function Publications() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={<FileText size={28} />}
+        icon={<FileText size={24} />}
         title="Publications"
         subtitle="Manuscripts and conference proceedings"
         accent="from-emerald-700 to-teal-700"
@@ -441,7 +511,7 @@ function Projects() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={<Database size={28} />}
+        icon={<Database size={24} />}
         title="Projects"
         subtitle="Featured work and open-source activity"
         accent="from-sky-700 to-cyan-700"
@@ -455,8 +525,8 @@ function Projects() {
 
       <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <h3 className="text-xl md:text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Github size={20} /> Open Source Activity
+          <h3 className="text-lg md:text-xl font-black text-slate-900 flex items-center gap-2">
+            <Github size={18} /> Open Source Activity
           </h3>
           <a
             href={profile.github}
@@ -484,7 +554,7 @@ function Education() {
   return (
     <div className="space-y-10">
       <PageHeader
-        icon={<School size={28} />}
+        icon={<School size={24} />}
         title="Education"
         subtitle="Academic background and training"
         accent="from-amber-700 to-orange-600"
@@ -506,12 +576,13 @@ function Education() {
 function PageHeader({ icon, title, subtitle, accent }) {
   return (
     <div className="flex items-start gap-4">
-      <div className={`p-4 rounded-3xl text-white shadow-xl bg-gradient-to-br ${accent}`}>
+      <div className={`p-3 rounded-3xl text-white shadow-xl bg-gradient-to-br ${accent}`}>
         {icon}
       </div>
       <div>
-        <h2 className="text-4xl md:text-[2.5rem] font-black text-slate-900">{title}</h2>
-        <p className="mt-1 text-slate-600 font-medium">{subtitle}</p>
+        {/* Smaller page header title */}
+        <h2 className="text-2xl md:text-3xl font-black text-slate-900">{title}</h2>
+        <p className="mt-1 text-sm text-slate-600 font-medium">{subtitle}</p>
       </div>
     </div>
   );
@@ -520,8 +591,9 @@ function PageHeader({ icon, title, subtitle, accent }) {
 function SectionTitle({ badge, title }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xl">{badge}</span>
-      <h3 className="text-base md:text-lg font-black text-slate-900 uppercase tracking-widest">
+      <span className="text-lg">{badge}</span>
+      {/* Smaller section title */}
+      <h3 className="text-sm md:text-base font-black text-slate-900 uppercase tracking-wide">
         {title}
       </h3>
     </div>
@@ -530,9 +602,9 @@ function SectionTitle({ badge, title }) {
 
 function CardPanel({ title, accent, children }) {
   return (
-    <div className={`bg-white p-8 rounded-3xl shadow-xl border border-slate-200`}>
+    <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200">
       <div className={`border-l-4 ${accent} pl-4`}>
-        <p className="text-sm font-black text-slate-500 uppercase tracking-widest">{title}</p>
+        <p className="text-xs font-black text-slate-500 uppercase tracking-widest">{title}</p>
       </div>
       <div className="mt-6">{children}</div>
     </div>
@@ -543,7 +615,11 @@ function SSFrame({ photo, alt }) {
   return (
     <div className="relative">
       <div className="w-60 h-60 md:w-64 md:h-64 rounded-3xl shadow-2xl overflow-hidden border-4 border-white bg-gradient-to-br from-indigo-400 via-blue-400 to-cyan-400 p-1">
-        <img src={photo} alt={alt} className="w-full h-full object-cover object-top rounded-2xl" />
+        <img
+          src={photo}
+          alt={alt}
+          className="w-full h-full object-cover object-top rounded-2xl"
+        />
       </div>
       <div className="absolute -bottom-5 -right-5 bg-gradient-to-br from-amber-400 to-orange-500 p-3 rounded-3xl shadow-xl border-4 border-white">
         <Sparkles className="text-white" size={22} fill="white" />
@@ -603,16 +679,34 @@ function InfoCard({ icon, title, desc, accent }) {
       <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center mb-5">
         {icon}
       </div>
-      <h3 className="text-lg font-black">{title}</h3>
-      <p className="mt-2 text-white/90">{desc}</p>
+      <h3 className="text-base md:text-lg font-black">{title}</h3>
+      <p className="mt-2 text-white/90 text-sm md:text-base">{desc}</p>
     </div>
   );
 }
 
-function NewsCard({ date, title, desc, tagColor }) {
+function NewsCard({ date, title, desc, tagColor, light = false }) {
+  if (light) {
+    return (
+      <div className="flex gap-4 items-start bg-slate-50 border border-slate-200 p-5 rounded-3xl">
+        <div
+          className={`${tagColor} text-slate-900 px-3 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow`}
+        >
+          {date}
+        </div>
+        <div>
+          <p className="font-black text-base md:text-lg text-slate-900">{title}</p>
+          <p className="mt-1 text-slate-600 text-sm md:text-base">{desc}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-4 items-start bg-white/10 border border-white/15 backdrop-blur p-5 rounded-3xl">
-      <div className={`${tagColor} text-slate-900 px-3 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow`}>
+      <div
+        className={`${tagColor} text-slate-900 px-3 py-2 rounded-2xl text-sm font-black whitespace-nowrap shadow`}
+      >
         {date}
       </div>
       <div>
@@ -628,7 +722,7 @@ function ResearchRow({ title, desc, accent }) {
     <div className="flex gap-4 p-5 bg-white rounded-2xl shadow-md border border-slate-100 hover:shadow-lg transition">
       <div className={`w-2 rounded-full bg-gradient-to-b ${accent}`} />
       <div>
-        <p className="font-black text-slate-900">{title}</p>
+        <p className="font-black text-slate-900 text-sm md:text-base">{title}</p>
         <p className="mt-1 text-sm text-slate-600">{desc}</p>
       </div>
     </div>
@@ -643,7 +737,7 @@ function SkillCategory({ title, items, accent }) {
         {items.map((it) => (
           <span
             key={it}
-            className={`px-3 py-2 rounded-xl text-xs font-black text-white bg-gradient-to-r ${accent} shadow`}
+            className={`px-3 py-2 rounded-xl text-[11px] md:text-xs font-black text-white bg-gradient-to-r ${accent} shadow`}
           >
             {it}
           </span>
@@ -662,7 +756,7 @@ function PubCard({ id, title, venue, authors, featured, accent = "from-slate-700
             {id}
           </span>
           <div>
-            <h4 className="text-lg md:text-xl font-black">{title}</h4>
+            <h4 className="text-base md:text-lg font-black">{title}</h4>
             <p className="mt-2 text-white/90 text-sm font-medium">{authors}</p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-white/15">
@@ -681,11 +775,13 @@ function PubCard({ id, title, venue, authors, featured, accent = "from-slate-700
   return (
     <div className="p-7 rounded-3xl bg-white shadow-lg border border-slate-200 hover:shadow-xl transition">
       <div className="flex gap-5">
-        <span className={`w-10 h-10 rounded-2xl bg-gradient-to-r ${accent} text-white flex items-center justify-center font-black shadow`}>
+        <span
+          className={`w-10 h-10 rounded-2xl bg-gradient-to-r ${accent} text-white flex items-center justify-center font-black shadow`}
+        >
           {id}
         </span>
         <div>
-          <h4 className="text-lg font-black text-slate-900">{title}</h4>
+          <h4 className="text-base md:text-lg font-black text-slate-900">{title}</h4>
           <p className="mt-2 text-sm text-slate-600 font-medium">{authors}</p>
           <div className="mt-3">
             <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700">
@@ -703,13 +799,20 @@ function ProjectCard({ title, subtitle, desc, tags, link, accent }) {
     <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-slate-200 hover:shadow-2xl transition group">
       <div className={`h-3 bg-gradient-to-r ${accent}`} />
       <div className="p-7">
-        <h3 className="text-xl font-black text-slate-900 group-hover:text-indigo-800 transition">{title}</h3>
-        <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">{subtitle}</p>
-        <p className="mt-4 text-slate-600">{desc}</p>
+        <h3 className="text-lg md:text-xl font-black text-slate-900 group-hover:text-indigo-800 transition">
+          {title}
+        </h3>
+        <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+          {subtitle}
+        </p>
+        <p className="mt-4 text-slate-600 text-sm md:text-base">{desc}</p>
 
         <div className="mt-5 flex flex-wrap gap-2">
           {tags.map((t) => (
-            <span key={t} className={`px-3 py-1.5 rounded-xl text-xs font-black text-white bg-gradient-to-r ${accent} shadow`}>
+            <span
+              key={t}
+              className={`px-3 py-1.5 rounded-xl text-[11px] md:text-xs font-black text-white bg-gradient-to-r ${accent} shadow`}
+            >
               {t}
             </span>
           ))}
@@ -736,13 +839,23 @@ function EducationCard({ degree, period, org, gpa, active }) {
 
       <div className="bg-white p-7 rounded-3xl shadow-xl border border-slate-200 hover:shadow-2xl transition">
         <div className="flex items-start justify-between gap-3 flex-wrap">
-          <h3 className="text-xl font-black text-slate-900">{degree}</h3>
-          <span className={`text-xs font-black px-3 py-1.5 rounded-full text-white ${active ? "bg-sky-600" : "bg-slate-600"}`}>
+          <h3 className="text-lg md:text-xl font-black text-slate-900">{degree}</h3>
+          <span
+            className={`text-xs font-black px-3 py-1.5 rounded-full text-white ${
+              active ? "bg-sky-600" : "bg-slate-600"
+            }`}
+          >
             {period}
           </span>
         </div>
         <p className="mt-2 text-slate-600 font-bold">{org}</p>
-        <div className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-black ${active ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-800 border border-slate-200"}`}>
+        <div
+          className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-black ${
+            active
+              ? "bg-emerald-600 text-white"
+              : "bg-slate-100 text-slate-800 border border-slate-200"
+          }`}
+        >
           <Sparkles size={16} /> GPA: {gpa}
         </div>
       </div>
@@ -757,7 +870,7 @@ function IconButton({ href, label, icon }) {
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer" : undefined}
       aria-label={label}
-      className="p-3 rounded-xl bg-white/10 hover:bg-white/15 transition"
+      className="p-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 transition text-slate-700"
     >
       {icon}
     </a>
