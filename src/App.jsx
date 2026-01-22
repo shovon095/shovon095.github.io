@@ -42,7 +42,7 @@ const profile = {
   photo: profilePic,
 
   bio:
-    "I develop trustworthy AI systems for mission-critical domains, with a focus on Large Language Models (LLMs), neuro-symbolic Text-to-SQL, and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, and policy optimization to improve structured generation, and I design interpretable distillation methods for reliable clinical extraction.",
+    "I am a PhD candidate working on trustworthy AI for mission-critical applications, with emphasis on Large Language Models (LLMs), neuro-symbolic Text-to-SQL, and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, policy optimization, and interpretable distillation for reliable structured generation and clinical extraction",
 };
 
 const highlights = [
@@ -75,7 +75,7 @@ const highlights = [
 const recognitions = [
   {
     icon: <Sparkles size={12} />,
-    text: "Top-3 Global Placement (Generator Track), NIST GenAI Text-to-Text Challenge (2024)",
+    text: "Achieved strong absolute performance(Generator & Discriminator Track), NIST GenAI Text-to-Text Challenge (2024)",
   },
   {
     icon: <Award size={12} />,
