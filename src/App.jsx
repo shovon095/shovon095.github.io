@@ -24,12 +24,7 @@ import {
   Download,
 } from "lucide-react";
 
-// ✅ Replace with your image path
 import profilePic from "./assets/shouvon.jpg";
-
-/* =========================
-   DATA - SOURCE: CV
-   ========================= */
 
 const profile = {
   name: "Shouvon Sarker",
@@ -42,7 +37,7 @@ const profile = {
   photo: profilePic,
 
   bio:
-    "I am a PhD candidate working on trustworthy AI for mission-critical applications, with emphasis on Large Language Models (LLMs), neuro-symbolic Text-to-SQL, and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, policy optimization, and interpretable distillation for reliable structured generation and clinical extraction",
+    "I am a PhD candidate working on trustworthy AI with emphasis on Large Language Models (LLMs), neuro-symbolic Text-to-SQL and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, policy optimization and interpretable distillation for reliable structured generation and clinical extraction",
 };
 
 const highlights = [
@@ -179,10 +174,6 @@ const publicationsByCategory = {
   },
 };
 
-/* =========================
-   ANIMATIONS & MASCOT
-   ========================= */
-
 const RobotMascot = () => (
   <motion.div
     animate={{ y: [0, -8, 0] }}
@@ -224,10 +215,6 @@ const PageWrapper = ({ children }) => (
     {children}
   </motion.div>
 );
-
-/* =========================
-   MAIN APP
-   ========================= */
 
 export default function App() {
   return (
@@ -303,10 +290,6 @@ export default function App() {
     </Router>
   );
 }
-
-/* =========================
-   PAGES
-   ========================= */
 
 function Home() {
   return (
@@ -762,10 +745,6 @@ function Education() {
     </PageWrapper>
   );
 }
-
-/* =========================
-   UI HELPERS
-   ========================= */
 
 function SectionTitle({ icon, children }) {
   return (
