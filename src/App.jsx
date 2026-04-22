@@ -1,13 +1,42 @@
-import React from "react";
-import { HashRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import React, { useEffect } from "react";
+import { HashRouter as Router, Routes, Route, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Mail, Linkedin, Github, Award, Microscope, Sparkles, Terminal,
-  Users, Heart, Coffee, Globe, Database, BrainCircuit, Code2,
-  FlaskConical, Presentation, MapPin, FileText, ExternalLink, Download,
-} from "lucide-react";
+import { Mail, Linkedin, Github, ArrowUpRight, MapPin } from "lucide-react";
 
 import profilePic from "./assets/shouvon.jpg";
+
+/* ============================================================
+   DESIGN NOTES (keep this in mind when editing)
+   ------------------------------------------------------------
+   Direction: editorial / academic. Think Percy Liang's page,
+   the MIT CSAIL faculty pages, or a literary journal — not a
+   SaaS landing page.
+
+   Rules:
+   - Serif display type (EB Garamond) for headings; clean
+     sans (Inter) for body. NO uppercase-tracking-widest labels.
+   - One accent color only: a muted ink/red for links.
+     Background is warm off-white. No indigo, no amber, no
+     gradients, no badges with sparkles.
+   - No icons inside body text. No mascots. No stickers on
+     the portrait.
+   - Publications are the hero of the site — they have links.
+   - Prose > cards. Whitespace > decoration.
+   ============================================================ */
+
+/* --- FONT LOADING: do this once in index.html <head> instead
+   if you prefer. Included here for convenience. --- */
+const FontLoader = () => {
+  useEffect(() => {
+    const l = document.createElement("link");
+    l.rel = "stylesheet";
+    l.href =
+      "https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap";
+    document.head.appendChild(l);
+    return () => document.head.removeChild(l);
+  }, []);
+  return null;
+};
 
 /* =========================
    DATA
@@ -15,679 +44,636 @@ import profilePic from "./assets/shouvon.jpg";
 
 const profile = {
   name: "Shouvon Sarker",
-  title: "PhD Candidate in Electrical Engineering",
-  org: "Prairie View A&M University (PVAMU)",
-  address: "702 Santee Street, Prairie View, TX 77445",
+  title: "PhD Candidate, Electrical Engineering",
+  org: "Prairie View A&M University",
+  location: "Prairie View, Texas",
   email: "shouvonsarker@gmail.com",
   linkedin: "https://www.linkedin.com/in/shouvon-sarker",
   github: "https://github.com/shovon095",
   photo: profilePic,
-  bio: "I am a PhD candidate working on trustworthy AI for mission-critical applications, with emphasis on Large Language Models (LLMs), neuro-symbolic Text-to-SQL, and clinical NLP. My research combines probabilistic error modeling, counterfactual repair, policy optimization, and interpretable distillation for reliable structured generation and clinical extraction",
+  // One-sentence pitch. Don't hide the work behind hedges.
+  pitch:
+    "I work on trustworthy large language models for structured generation — specifically neuro-symbolic Text-to-SQL and clinical information extraction.",
+  // Longer bio, written as prose (not a list of buzzwords).
+  bio: [
+    "I am a PhD candidate at Prairie View A&M University, advised by Dr. Xishuang Dong and Dr. Lijun Qian. My research addresses a recurring failure mode of modern LLMs: they produce fluent outputs that are structurally or semantically wrong, and the errors are hard to localize or repair.",
+    "My dissertation develops three complementary approaches to this problem — inference-time Bayesian error diagnosis and repair for Text-to-SQL; schema-grounded non-parametric attention that improves query accuracy without external knowledge; and structured Jensen–Shannon distillation for interpretable clinical named-entity recognition.",
+    "I also lead the PVAMU team for the NIST GenAI Text-to-Text Challenge, and have deployed an interactive Text-to-SQL system for scientific databases.",
+  ],
 };
 
-const highlights = [
+const research = [
   {
-    icon: <BrainCircuit size={16} className="text-indigo-700" />,
-    title: "Bayesian Text-to-SQL",
-    desc: "Hierarchical error localization + counterfactual repair + PPO optimization; improved execution accuracy by ~12%.",
+    title: "Inference-time Bayesian error diagnosis and repair for Text-to-SQL",
+    body:
+      "Treats SQL generation as a repairable process: at inference time, a Bayesian diagnosis step localizes the error site (clause, predicate, join), proposes counterfactual edits, and a PPO objective reinforces edits that produce executable, semantically faithful queries. Improves execution accuracy by ~12% over the base generator on our evaluation suite.",
   },
   {
-    icon: <Database size={16} className="text-indigo-700" />,
-    title: "Schema-Grounded Attention",
-    desc: "Non-parametric, schema-grounded attention; improved query accuracy by ~10% without external knowledge.",
+    title: "Schema-grounded non-parametric attention",
+    body:
+      "A lightweight attention mechanism conditioned directly on schema structure rather than on retrieved external knowledge. Raises query accuracy by ~10% on benchmarks while reducing dependence on curated KBs.",
   },
   {
-    icon: <FlaskConical size={16} className="text-indigo-700" />,
-    title: "Explainable Distillation (NER)",
-    desc: "Structured Jensen–Shannon divergence to transfer token + transition structure for interpretable clinical extraction.",
+    title: "Structured Jensen–Shannon distillation for clinical NER",
+    body:
+      "Distills both token-level and transition-level structure from a teacher model using a structured JS objective, yielding compact students whose predictions remain interpretable to clinical reviewers.",
   },
   {
-    icon: <Terminal size={16} className="text-indigo-700" />,
-    title: "Deployment",
-    desc: "Built an interactive Text-to-SQL system for scientific databases; practical evaluation and iteration with real schemas.",
+    title: "Generative–critic evaluation for LLMs",
+    body:
+      "Framework developed for the NIST GenAI T2T Challenge (2024): a generator and a critic co-evaluate outputs to surface robustness failures that single-model metrics miss.",
   },
 ];
 
 const recognitions = [
-  { icon: <Sparkles size={12} />, text: "Achieved strong absolute performance (Generator & Discriminator Track), NIST GenAI Text-to-Text Challenge (2024)" },
-  { icon: <Award size={12} />, text: "Outstanding Student Award, PVAMU CREDIT Center (2024)" },
-  { icon: <Microscope size={12} />, text: "Top 10%, n2c2 Clinical NLP Challenge (2022)" },
-  { icon: <Presentation size={12} />, text: "Invited Speaker, NIST GenAI T2T Workshop (2024)" },
+  { year: "2024", text: "Top-3 placement (Top 10%), NIST GenAI Text-to-Text Challenge — Generator Track." },
+  { year: "2024", text: "Invited speaker, NIST GenAI Text-to-Text Workshop." },
+  { year: "2024", text: "Outstanding Student Award, PVAMU CREDIT Center." },
+  { year: "2022", text: "Top 10% finish, n2c2 Clinical NLP Challenge." },
 ];
 
-const publicationsByCategory = {
-  review: {
-    title: "Manuscripts Under Review / In Preparation",
-    badge: "Manuscripts",
+/* Publications: give each item a `links` slot so reviewers can
+   click through. Fill in arxiv / pdf / code URLs as they exist;
+   leave `links` as [] if nothing is public yet. */
+/* Author strings follow a consistent convention:
+   - Your own name is wrapped so the Publications page can bold it.
+   - "et al." is preserved when the CV uses it. */
+const ME = "Sarker, S."; // rendered bold on the page
+
+const publications = [
+  {
+    section: "Under review & in submission",
     items: [
-      { id: 1, title: "From Tokens to Transitions: A Structured Jensen–Shannon Knowledge Distillation Method for NER", venue: "Submitted to IEEE TKDE, 2025" },
-      { id: 2, title: "Learning SQL Correctness: Bayesian Error Localization, Counterfactual Repair, and Policy Optimization", venue: "In Preparation, 2025" },
+      {
+        authors: [ME, "Qian, L.", "Dong, X."],
+        title:
+          "From Tokens to Transitions: A Structured Jensen–Shannon Knowledge Distillation Method for NER",
+        venue: "IEEE Transactions on Knowledge and Data Engineering",
+        status: "Under revision",
+        year: "2025",
+        links: [],
+      },
+      {
+        authors: [ME, "Qian, L.", "Dong, X."],
+        title:
+          "Inference-Time Bayesian Error Diagnosis and Repair for Text-to-SQL",
+        venue: "In submission",
+        year: "2025",
+        links: [],
+      },
     ],
   },
-  conf: {
-    title: "Conference Proceedings (Peer-Reviewed)",
-    badge: "Conference",
+  {
+    section: "Conference proceedings",
     items: [
-      { id: 3, title: "Integrating Non-Parametric Attention to Enhance LLM-Based Text-to-SQL Without External Knowledge", venue: "ICDM 2025" },
-      { id: 4, title: "Enhancing LLM Fine-tuning for Text-to-SQLs by SQL Quality Measurement", venue: "PhD Forum, ICDM 2025" },
-      { id: 5, title: "Text Generator and Text Discriminator for NIST GenAI T2T Challenge", venue: "AIRC 2025" },
-      { id: 6, title: "Medical Data Augmentation via ChatGPT: A Case Study on Medication Identification and Medication Event Classification", venue: "IEEE BHI 2023" },
-      { id: 7, title: "Ensemble BERT for Medication Event Classification on Electronic Health Records", venue: "ICIBM 2023" },
-      { id: 8, title: "Enhancing Deep Knowledge Tracing via Diffusion Models for Personalized Adaptive Learning", venue: "ASEE 2024" },
-      { id: 9, title: "Integrating Human-in-the-loop into Swarm Learning for Decentralized Fake News Detection", venue: "IDSTA 2022" },
+      {
+        authors: [ME, "et al."],
+        title:
+          "Integrating Non-Parametric Attention to Enhance LLM-Based Text-to-SQL Without External Knowledge",
+        venue: "IEEE International Conference on Data Mining (ICDM)",
+        year: "2025",
+        links: [],
+      },
+      {
+        authors: [ME, "et al."],
+        title: "Enhancing LLM Fine-tuning for Text-to-SQL by SQL Quality Measurement",
+        venue: "PhD Forum, IEEE International Conference on Data Mining (ICDM)",
+        year: "2025",
+        links: [],
+      },
+      {
+        authors: [ME, "Dong, X.", "Qian, L."],
+        title: "Text Generator and Text Discriminator for the NIST GenAI T2T Challenge",
+        venue: "AIRC",
+        year: "2025",
+        links: [],
+      },
+      {
+        authors: ["Kuo, M.", ME, "Qian, L.", "et al."],
+        title:
+          "Enhancing Deep Knowledge Tracing via Diffusion Models for Personalized Adaptive Learning",
+        venue: "ASEE Annual Conference",
+        year: "2024",
+        links: [],
+      },
+      {
+        authors: [ME, "Li, X.", "Dong, X."],
+        title:
+          "Medical Data Augmentation via ChatGPT: A Case Study on Medication Identification and Medication Event Classification",
+        venue: "IEEE Conference on Biomedical and Health Informatics (BHI)",
+        year: "2023",
+        links: [],
+      },
+      {
+        authors: [ME, "Dong, X.", "Qian, L."],
+        title: "Ensemble BERT for Medication Event Classification on Electronic Health Records",
+        venue: "International Conference on Intelligent Biology and Medicine (ICIBM)",
+        year: "2023",
+        links: [],
+      },
+      {
+        authors: ["Dong, X.", ME, "Qian, L."],
+        title: "Integrating Human-in-the-Loop into Swarm Learning for Decentralized Fake News Detection",
+        venue: "IDSTA",
+        year: "2022",
+        links: [],
+      },
     ],
   },
-  posters: {
-    title: "Poster Presentations",
-    badge: "Poster",
+  {
+    section: "Posters",
     items: [
-      { id: 10, title: "Improving LLM-based Text-to-SQL Through Integrating Self-Discover Reasoning", venue: "NASA DEAP Annual Meeting, 2024" },
-      { id: 11, title: "Classification of Medication Events from Electronic Health Records Using BERT Models", venue: "AIHC, Rice University, 2024" },
+      {
+        authors: [ME],
+        title: "Improving LLM-based Text-to-SQL through Self-Discover Reasoning",
+        venue: "NASA DEAP Annual Meeting",
+        year: "2024",
+        links: [],
+      },
+      {
+        authors: [ME],
+        title:
+          "Classification of Medication Events from Electronic Health Records Using BERT Models",
+        venue: "AI in Health Care (AIHC), Rice University",
+        year: "2024",
+        links: [],
+      },
     ],
   },
-};
+];
+
+const experience = [
+  {
+    role: "Graduate Research Assistant",
+    org: "Prairie View A&M University",
+    date: "2023 — Present",
+    body:
+      "PhD research on trustworthy LLMs: Bayesian Text-to-SQL debugging, schema-grounded attention, and interpretable distillation for clinical NER. Built and deployed an interactive Text-to-SQL system for scientific databases.",
+  },
+  {
+    role: "Team Lead, NIST GenAI Text-to-Text Challenge",
+    org: "PVAMU",
+    date: "2024",
+    body:
+      "Designed a generator–critic framework for robustness evaluation. Top-3 global placement (Top 10%) in the Generator Track; invited to present at the NIST GenAI T2T Workshop.",
+  },
+  {
+    role: "AI Assistant Developer",
+    org: "AMIE 2025 Conference",
+    date: "2025",
+    body:
+      "Built an Android conference assistant on GPT-4o with a retrieval layer over the conference knowledge base.",
+  },
+  {
+    role: "Graduate Research Assistant",
+    org: "Prairie View A&M University",
+    date: "2021 — 2022",
+    body:
+      "Master's research on calibration-aware ensemble BERT models for medication event classification from EHRs.",
+  },
+  {
+    role: "Instructor & Research Mentor",
+    org: "PVAMU",
+    date: "2023 — Present",
+    body:
+      "Instructor for a graduate prompt-engineering workshop (Chain-of-Thought, ReAct, applied LLM systems). Mentor to undergraduate ROTC students on research projects.",
+  },
+];
+
+const education = [
+  {
+    degree: "Ph.D., Electrical Engineering",
+    org: "Prairie View A&M University",
+    date: "2023 — Present",
+    note: "Dissertation (tentative): Enhancing Structured Predictions in Large Language Models. Advisors: Dr. Xishuang Dong, Dr. Lijun Qian.",
+  },
+  {
+    degree: "M.S., Electrical Engineering",
+    org: "Prairie View A&M University",
+    date: "2021 — 2022",
+    note: "Thesis: Medication Event Classification from Electronic Health Records Using BERT Models. Advisors: Dr. Xishuang Dong, Dr. Lijun Qian.",
+  },
+  {
+    degree: "B.S., Electronics & Communication Engineering",
+    org: "Khulna University of Engineering & Technology, Bangladesh",
+    date: "2014 — 2018",
+    note: "",
+  },
+];
 
 /* =========================
-   ANIMATIONS
-   ========================= */
-
-const RobotMascot = () => (
-  <motion.div
-    animate={{ y: [0, -8, 0] }}
-    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-    className="w-16 h-16"
-  >
-    <svg viewBox="0 0 100 100" className="w-full h-full">
-      <rect x="20" y="30" width="60" height="50" rx="15" fill="#4F46E5" />
-      <rect x="32" y="44" width="36" height="14" rx="4" fill="white" />
-      <motion.circle animate={{ opacity: [1, 0, 1] }} transition={{ duration: 2, repeat: Infinity }} cx="42" cy="51" r="3" fill="#4F46E5" />
-      <motion.circle animate={{ opacity: [1, 0, 1] }} transition={{ duration: 2, repeat: Infinity, delay: 0.5 }} cx="58" cy="51" r="3" fill="#4F46E5" />
-      <circle cx="50" cy="20" r="5" fill="#F43F5E" />
-      <path d="M50 20 L50 30" stroke="#4F46E5" strokeWidth="3" />
-    </svg>
-  </motion.div>
-);
-
-const PageWrapper = ({ children }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    transition={{ duration: 0.3 }}
-    className="w-full"
-  >
-    {children}
-  </motion.div>
-);
-
-/* =========================
-   MAIN APP
+   ROOT
    ========================= */
 
 export default function App() {
   return (
     <Router>
-      {/* 
-        KEY LAYOUT FIXES:
-        1. Use w-full on everything — no max-w constraints on the outer shell
-        2. The nav + main + footer use a flex-col on min-h-screen
-        3. Each page section uses the full viewport height (min-h-[calc(100vh-4rem)])
-        4. Inner content uses max-w-screen-2xl with generous px padding so it still looks good on ultrawide
-      */}
-      <div className="min-h-screen w-full bg-[#FDFEFF] text-slate-800 font-sans flex flex-col selection:bg-indigo-100">
+      <FontLoader />
+      <style>{`
+        :root {
+          --bg: #faf8f4;          /* warm off-white, not pure white */
+          --ink: #1a1a1a;         /* near-black body text */
+          --ink-soft: #4a4a4a;    /* secondary text */
+          --ink-faint: #8a8a8a;   /* meta text */
+          --rule: #e6e1d7;        /* hairline borders */
+          --accent: #8b1e1e;      /* muted oxblood for links */
+          --accent-hover: #5a1212;
+        }
+        html, body, #root { background: var(--bg); }
+        body {
+          font-family: 'Inter', -apple-system, sans-serif;
+          color: var(--ink);
+          -webkit-font-smoothing: antialiased;
+          font-feature-settings: "ss01", "cv11";
+        }
+        .font-serif { font-family: 'EB Garamond', Georgia, serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        /* inline text links inside prose */
+        .prose a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+        .prose a:hover { color: var(--accent-hover); }
+      `}</style>
 
-        {/* NAV — full width, sticky */}
-        <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">
-          <div className="w-full max-w-screen-2xl mx-auto px-8 lg:px-16 h-16 flex items-center justify-between">
-            <NavLink to="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-black">
-                S
-              </div>
-              <span className="font-black text-slate-900 tracking-tight text-base uppercase">
-                Shouvon
-              </span>
-            </NavLink>
-
-            <div className="hidden md:flex gap-2">
-              {["/", "/research", "/publications", "/experience", "/education"].map((path) => (
-                <NavLink
-                  key={path}
-                  to={path}
-                  className={({ isActive }) =>
-                    `px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                      isActive ? "bg-indigo-600 text-white shadow-md" : "text-slate-400 hover:text-indigo-600"
-                    }`
-                  }
-                >
-                  {path === "/" ? "Home" : path.substring(1)}
-                </NavLink>
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        {/* MAIN — fills remaining height, full width */}
+      <div className="min-h-screen w-full flex flex-col">
+        <Nav />
         <main className="flex-1 w-full">
           <AnimatePresence mode="wait">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/research" element={<Research />} />
-              <Route path="/publications" element={<PublicationsPage />} />
-              <Route path="/experience" element={<Experience />} />
-              <Route path="/education" element={<Education />} />
-            </Routes>
+            <RoutesWithKey />
           </AnimatePresence>
         </main>
-
-        {/* FOOTER — full width */}
-        <footer className="w-full bg-white border-t border-slate-100 py-10">
-          <div className="w-full max-w-screen-2xl mx-auto px-8 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h3 className="font-black text-slate-900">{profile.name}</h3>
-              <p className="text-[10px] text-slate-400 font-black uppercase">PhD Candidate @ PVAMU</p>
-              <div className="mt-3 flex flex-wrap items-center justify-center md:justify-start gap-3 text-[11px] text-slate-500 font-medium">
-                <span className="inline-flex items-center gap-2">
-                  <MapPin size={14} className="text-slate-400" /> {profile.address}
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <SocialBtn href={profile.github} icon={<Github />} />
-              <SocialBtn href={profile.linkedin} icon={<Linkedin />} />
-              <SocialBtn href={`mailto:${profile.email}`} icon={<Mail />} />
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </Router>
   );
 }
 
+function RoutesWithKey() {
+  const location = useLocation();
+  return (
+    <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Home />} />
+      <Route path="/research" element={<Research />} />
+      <Route path="/publications" element={<Publications />} />
+      <Route path="/cv" element={<CV />} />
+    </Routes>
+  );
+}
+
 /* =========================
-   PAGE SHELL — wraps all page content with full-width + viewport-height layout
+   NAV & FOOTER
    ========================= */
 
-function PageShell({ children, centered = false }) {
+function Nav() {
+  const links = [
+    { to: "/", label: "About" },
+    { to: "/research", label: "Research" },
+    { to: "/publications", label: "Publications" },
+    { to: "/cv", label: "CV" },
+  ];
   return (
-    <div className={`w-full min-h-[calc(100vh-4rem)] ${centered ? "flex flex-col items-center justify-center" : ""}`}>
-      <div className="w-full max-w-screen-2xl mx-auto px-8 lg:px-16 py-12">
-        {children}
-      </div>
+    <nav className="w-full border-b" style={{ borderColor: "var(--rule)" }}>
+      <Container>
+        <div className="h-20 flex items-center justify-between">
+          <NavLink to="/" className="font-serif text-xl" style={{ color: "var(--ink)" }}>
+            Shouvon Sarker
+          </NavLink>
+          <div className="flex gap-8">
+            {links.map((l) => (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                end={l.to === "/"}
+                className={({ isActive }) =>
+                  `text-sm transition-colors ${isActive ? "" : "hover:opacity-70"}`
+                }
+                style={({ isActive }) => ({
+                  color: isActive ? "var(--accent)" : "var(--ink-soft)",
+                  borderBottom: isActive ? "1px solid var(--accent)" : "1px solid transparent",
+                  paddingBottom: "2px",
+                })}
+              >
+                {l.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </Container>
+    </nav>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="w-full border-t mt-24" style={{ borderColor: "var(--rule)" }}>
+      <Container>
+        <div className="py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-sm" style={{ color: "var(--ink-faint)" }}>
+          <div>© {new Date().getFullYear()} Shouvon Sarker</div>
+          <div className="flex items-center gap-6">
+            <a href={`mailto:${profile.email}`} className="hover:opacity-70 flex items-center gap-2"><Mail size={14} />Email</a>
+            <a href={profile.github} target="_blank" rel="noreferrer" className="hover:opacity-70 flex items-center gap-2"><Github size={14} />GitHub</a>
+            <a href={profile.linkedin} target="_blank" rel="noreferrer" className="hover:opacity-70 flex items-center gap-2"><Linkedin size={14} />LinkedIn</a>
+          </div>
+        </div>
+      </Container>
+    </footer>
+  );
+}
+
+/* =========================
+   LAYOUT PRIMITIVES
+   ========================= */
+
+function Container({ children }) {
+  // Narrower than typical marketing sites — reads as editorial.
+  return <div className="w-full max-w-5xl mx-auto px-6 md:px-10">{children}</div>;
+}
+
+function Page({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Container>
+        <div className="py-16 md:py-24">{children}</div>
+      </Container>
+    </motion.div>
+  );
+}
+
+function SectionLabel({ children }) {
+  return (
+    <div
+      className="font-mono text-xs mb-6"
+      style={{ color: "var(--ink-faint)", letterSpacing: "0.04em" }}
+    >
+      {children}
     </div>
   );
 }
 
 /* =========================
-   PAGES
+   HOME / ABOUT
    ========================= */
 
 function Home() {
   return (
-    <PageWrapper>
-      <PageShell>
-        {/* Hero — takes up the full viewport height above the fold */}
-        <section className="min-h-[calc(100vh-10rem)] flex flex-col lg:flex-row gap-12 items-center justify-center">
-          {/* Left: Photo */}
-          <div className="relative shrink-0">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="w-64 h-64 md:w-80 md:h-80 xl:w-96 xl:h-96 rounded-[2rem] overflow-hidden border-8 border-white shadow-2xl relative z-10"
-            >
-              <img src={profile.photo} alt="Profile" className="w-full h-full object-cover" />
-            </motion.div>
-            <div className="absolute -bottom-3 -right-3 bg-amber-400 p-3 rounded-2xl shadow-lg border-4 border-white z-20">
-              <Heart className="text-white" size={20} fill="white" />
-            </div>
-          </div>
-
-          {/* Right: Info */}
-          <div className="flex-1 text-center lg:text-left max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest mb-4 border border-indigo-100">
-              {profile.title}
-            </div>
-
-            <h1 className="text-5xl md:text-6xl xl:text-7xl font-black text-slate-900 tracking-tight mb-3">
-              {profile.name}
-            </h1>
-
-            <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mb-4">
-              {profile.org}
-            </p>
-
-            <p className="text-base xl:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mb-7">
-              {profile.bio}
-            </p>
-
-            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-              <IconTag icon={<Globe size={14} />} label="Texas, USA" />
-              <IconTag icon={<Coffee size={14} />} label="LLMs & Text-to-SQL" />
-              <IconTag icon={<Users size={14} />} label="Teaching & Mentorship" />
-            </div>
-
-            <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-3 text-[11px] text-slate-600 font-medium">
-              <span className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-slate-100 shadow-sm">
-                <Mail size={14} className="text-slate-400" />
-                {profile.email}
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* Cards section below the fold */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-4">
-          <div className="p-8 bg-white border border-slate-100 rounded-3xl shadow-lg">
-            <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <Terminal size={16} className="text-indigo-600" /> What I Build
-            </h3>
-            <ul className="space-y-4">
-              {highlights.map((h, i) => (
-                <li key={i} className="flex gap-3 items-start p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="mt-0.5">{h.icon}</div>
-                  <div>
-                    <p className="text-xs font-black text-slate-900">{h.title}</p>
-                    <p className="text-xs text-slate-600 font-medium leading-relaxed mt-1">{h.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="p-8 bg-indigo-900 text-white rounded-3xl shadow-xl relative overflow-hidden">
-            <h3 className="text-sm font-black text-indigo-300 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <Award size={16} /> Recognitions
-            </h3>
-            <ul className="space-y-3">
-              {recognitions.map((r, idx) => (
-                <li key={idx} className="text-xs font-bold flex items-start gap-2">
-                  <span className="mt-0.5">{r.icon}</span>
-                  <span className="leading-relaxed">{r.text}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 p-4 rounded-2xl bg-white/10 border border-white/10">
-              <p className="text-[10px] font-black uppercase tracking-widest text-indigo-200 mb-2">Current Research Themes</p>
-              <p className="text-xs text-indigo-50/90 font-medium leading-relaxed">
-                Trustworthy AI (XAI) • Neuro-Symbolic Text-to-SQL • Bayesian Deep Learning • Knowledge Distillation • Clinical NLP • Counterfactual Reasoning
-              </p>
-            </div>
-          </div>
-        </div>
-      </PageShell>
-    </PageWrapper>
-  );
-}
-
-function Research() {
-  const areas = [
-    {
-      title: "Trustworthy AI (XAI)",
-      desc: "Designing interpretable models and evaluation signals so experts can audit structured predictions and failure modes.",
-      metric: "Interpretability-first evaluation",
-      icon: <Microscope size={16} className="text-indigo-600" />,
-    },
-    {
-      title: "LLMs for Structured Generation",
-      desc: "Developing reliable generation pipelines for SQL and clinical extraction, emphasizing correctness, calibration, and robustness.",
-      metric: "Reliability + calibration",
-      icon: <BrainCircuit size={16} className="text-indigo-600" />,
-    },
-    {
-      title: "Bayesian Text-to-SQL Debugging",
-      desc: "Hierarchical error localization and counterfactual repair combined with policy optimization; improved execution accuracy by ~12%.",
-      metric: "~12% execution accuracy ↑",
-      icon: <Database size={16} className="text-indigo-600" />,
-    },
-    {
-      title: "Schema-Grounded Attention (No External KB)",
-      desc: "Non-parametric, schema-grounded attention mechanisms that improve Text-to-SQL accuracy without relying on external knowledge sources.",
-      metric: "~10% query accuracy ↑",
-      icon: <Code2 size={16} className="text-indigo-600" />,
-    },
-  ];
-
-  return (
-    <PageWrapper>
-      <PageShell>
-        <div className="min-h-[calc(100vh-10rem)] flex flex-col">
-          <div className="flex flex-col items-center mb-12 text-center">
-            <RobotMascot />
-            <h2 className="text-3xl font-black text-slate-900 mt-4">Expertise & Focus</h2>
-            <p className="text-xs text-slate-400 font-black uppercase tracking-widest mt-2">
-              Research directions + measurable outcomes
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-1">
-            {/* Focus Areas */}
-            <div className="space-y-4">
-              <SectionTitle icon={<BrainCircuit size={16} className="text-indigo-600" />}>
-                Core Focus Areas
-              </SectionTitle>
-              {areas.map((a, i) => (
-                <div key={i} className="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:border-indigo-200 transition-all group">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h4 className="text-sm font-black text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">{a.title}</h4>
-                      <p className="text-xs text-slate-600 font-medium leading-relaxed">{a.desc}</p>
-                    </div>
-                    <div className="shrink-0 mt-0.5">{a.icon}</div>
-                  </div>
-                  <div className="mt-4">
-                    <span className="inline-flex items-center gap-2 text-[10px] font-black text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full uppercase tracking-widest border border-indigo-100">
-                      <Sparkles size={12} /> {a.metric}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Technical Tools */}
-            <div className="space-y-4">
-              <SectionTitle icon={<Terminal size={16} className="text-indigo-600" />}>
-                Technical Tools
-              </SectionTitle>
-              <div className="grid grid-cols-2 gap-4">
-                <SkillBox cat="Languages" items={["Python (Advanced)", "C/C++", "SQL", "MATLAB", "PHP", "HTML/CSS"]} />
-                <SkillBox cat="Deep Learning" items={["PyTorch", "TensorFlow", "Keras", "Hugging Face Transformers"]} />
-                <SkillBox cat="LLM Tools" items={["LoRA", "Adapters", "PEFT", "OpenAI API", "LangChain"]} />
-                <SkillBox cat="Data Science" items={["Pandas", "NumPy", "Scikit-learn", "Matplotlib", "Seaborn"]} />
-                <SkillBox cat="Databases" items={["MySQL", "PostgreSQL", "SQLite"]} />
-                <SkillBox cat="Deployment" items={["Git", "Docker", "Linux", "AWS"]} />
-              </div>
-
-              <div className="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <Users size={14} className="text-indigo-600" /> Teaching & Mentorship
-                </h4>
-                <ul className="space-y-2 text-xs text-slate-600 font-medium">
-                  <li className="flex items-start gap-2">
-                    <ChevronDot /> Instructor, Prompt Engineering Workshop (Graduate level): Chain-of-Thought, ReAct, and applied LLM systems
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ChevronDot /> Research Mentor (2023–Present): supervised undergraduate ROTC students
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PageShell>
-    </PageWrapper>
-  );
-}
-
-function PublicationsPage() {
-  return (
-    <PageWrapper>
-      <PageShell>
-        <div className="flex flex-col items-center mb-12 text-center">
-          <h2 className="text-3xl font-black text-slate-900">Publications</h2>
-          <p className="text-xs text-slate-400 font-black uppercase tracking-widest mt-2">
-            Manuscripts • Conferences • Posters
+    <Page>
+      {/* Hero: portrait sits quietly to the side, not on a pedestal.
+          The pitch sentence is the first thing you read. */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-12 items-start">
+        <div>
+          <h1 className="font-serif text-5xl md:text-6xl leading-[1.05] tracking-tight mb-6" style={{ color: "var(--ink)" }}>
+            {profile.name}
+          </h1>
+          <p className="text-base mb-10" style={{ color: "var(--ink-soft)" }}>
+            {profile.title} &middot; {profile.org}
           </p>
+          <p className="font-serif text-2xl md:text-[1.7rem] leading-[1.45] mb-10" style={{ color: "var(--ink)" }}>
+            {profile.pitch}
+          </p>
+          <div className="prose max-w-none space-y-5 text-[15px] leading-[1.75]" style={{ color: "var(--ink-soft)" }}>
+            {profile.bio.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm" style={{ color: "var(--ink-faint)" }}>
+            <span className="flex items-center gap-2"><MapPin size={14} />{profile.location}</span>
+            <a href={`mailto:${profile.email}`} className="flex items-center gap-2 hover:opacity-70">
+              <Mail size={14} />{profile.email}
+            </a>
+          </div>
         </div>
 
-        <div className="space-y-10">
-          {Object.entries(publicationsByCategory).map(([key, cat]) => (
-            <section key={key}>
-              <div className="flex items-end justify-between gap-6 mb-6">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-3">
-                  <span className="w-6 h-px bg-slate-200" />
-                  {cat.title}
-                </h3>
-                <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest border border-indigo-100">
-                  {cat.badge}
-                </span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {cat.items.map((p) => (
-                  <div key={p.id} className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all h-full flex flex-col justify-between">
-                    <h4 className="text-xs font-black text-slate-900 leading-relaxed mb-4">{p.title}</h4>
-                    <span className="text-[10px] font-black text-slate-700 bg-slate-50 px-2 py-1 rounded self-start uppercase tracking-tighter border border-slate-100">
-                      {p.venue}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
+        <div className="order-first md:order-last">
+          <img
+            src={profile.photo}
+            alt={profile.name}
+            className="w-40 md:w-full aspect-square object-cover grayscale"
+            style={{ filter: "grayscale(100%) contrast(1.02)" }}
+          />
+        </div>
+      </div>
+
+      {/* Recognitions — a quiet list, no badges */}
+      <div className="mt-24">
+        <SectionLabel>Recognition</SectionLabel>
+        <ul>
+          {recognitions.map((r, i) => (
+            <li
+              key={i}
+              className="flex gap-6 py-4 border-t text-[15px]"
+              style={{ borderColor: "var(--rule)" }}
+            >
+              <span className="font-mono text-sm pt-0.5 shrink-0 w-16" style={{ color: "var(--ink-faint)" }}>
+                {r.year}
+              </span>
+              <span style={{ color: "var(--ink-soft)" }}>{r.text}</span>
+            </li>
           ))}
-        </div>
-      </PageShell>
-    </PageWrapper>
-  );
-}
-
-function Experience() {
-  const jobs = [
-    {
-      title: "Graduate Research Assistant",
-      org: "Prairie View A&M University (PVAMU)",
-      date: "Jan 2023 – Present",
-      bullets: [
-        "Bayesian Text-to-SQL: hierarchical error localization + counterfactual repair + PPO optimization; improved execution accuracy by ~12%.",
-        "Non-Parametric Attention: schema-grounded attention improved query accuracy by ~10% without external knowledge.",
-        "Explainable Distillation: structured Jensen–Shannon divergence for interpretable clinical NER.",
-        "Deployment: implemented an interactive Text-to-SQL system for scientific databases.",
-      ],
-    },
-    {
-      title: "Team Lead (NIST GenAI Text-to-Text Challenge)",
-      org: "PVAMU Team",
-      date: "2024",
-      bullets: [
-        "Designed a generative–critic framework for robustness evaluation.",
-        "Achieved Top-3 global placement (Generator Track).",
-        "Invited speaker at the NIST GenAI T2T Workshop (2024).",
-      ],
-    },
-    {
-      title: "AI Assistant Developer",
-      org: "AMIE 2025 Conference",
-      date: "2025",
-      bullets: [
-        "Developed an Android AI assistant using OpenAI GPT-4o with a domain-specific knowledge base.",
-      ],
-    },
-    {
-      title: "Graduate Research Assistant",
-      org: "Prairie View A&M University (PVAMU)",
-      date: "Aug 2021 – Dec 2022",
-      bullets: [
-        "Built ensemble BERT models for clinical NLP with calibration-aware prediction.",
-      ],
-    },
-    {
-      title: "Instructor & Research Mentor",
-      org: "PVAMU",
-      date: "2023 – Present",
-      bullets: [
-        "Instructor (Prompt Engineering Workshop, 2024): Chain-of-Thought, ReAct, applied LLM systems.",
-        "Mentored undergraduate ROTC students on research projects and experimental workflows.",
-      ],
-    },
-  ];
-
-  return (
-    <PageWrapper>
-      <PageShell>
-        <div className="flex items-center justify-between gap-6 mb-8">
-          <div>
-            <h2 className="text-3xl font-black text-slate-900">Experience</h2>
-            <p className="text-xs text-slate-400 font-black uppercase tracking-widest mt-2">
-              Research • Leadership • Development • Teaching
-            </p>
-          </div>
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-2xl bg-indigo-50 border border-indigo-100">
-            <Award size={16} className="text-indigo-600" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-700">Outcome-driven work</span>
-          </div>
-        </div>
-
-        {/* Two-column grid on large screens */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {jobs.map((j, i) => (
-            <div key={i} className="p-8 bg-white border border-slate-100 rounded-3xl shadow-lg flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-black text-slate-900">{j.title}</h3>
-                  <p className="text-xs font-bold text-indigo-600 uppercase tracking-widest mt-1">{j.org}</p>
-                </div>
-                <span className="text-[10px] font-black bg-slate-50 text-slate-400 px-3 py-1.5 rounded-full uppercase tracking-widest shrink-0 self-start">
-                  {j.date}
-                </span>
-              </div>
-              <ul className="space-y-2">
-                {j.bullets.map((b, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 font-medium leading-relaxed">
-                    <ChevronDot /> {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </PageShell>
-    </PageWrapper>
-  );
-}
-
-function Education() {
-  const edu = [
-    {
-      degree: "Ph.D. in Electrical Engineering",
-      date: "Jan 2023 – Present",
-      org: "Prairie View A&M University, Texas, USA",
-      focus: "Dissertation (Tentative): Enhancing Structured Predictions in Large Language Models",
-      extra: "Advisors: Dr. Xishuang Dong, Dr. Lijun Qian",
-    },
-    {
-      degree: "M.S. in Electrical Engineering",
-      date: "Aug 2021 – Dec 2022",
-      org: "Prairie View A&M University, Texas, USA",
-      focus: "Dissertation: Medication Events Classification from Electronic Health Records Using BERT Models",
-      extra: "Advisors: Dr. Xishuang Dong, Dr. Lijun Qian",
-    },
-    {
-      degree: "B.S. in Electronics & Communication Engineering",
-      date: "Apr 2014 – Mar 2018",
-      org: "Khulna University of Engineering & Technology, Bangladesh",
-      focus: "",
-      extra: "",
-    },
-  ];
-
-  const coursework = [
-    "Selected Topics in Deep Learning: Bayesian Networks, Variable Elimination, GANs",
-    "Modern Artificial Intelligence: CSPs, Optimal Decisions in Games, Hidden Markov Models",
-  ];
-
-  return (
-    <PageWrapper>
-      <PageShell>
-        <div className="min-h-[calc(100vh-10rem)] flex flex-col">
-          <div className="mb-8">
-            <h2 className="text-3xl font-black text-slate-900">Education</h2>
-            <p className="text-xs text-slate-400 font-black uppercase tracking-widest mt-2">
-              Degrees • Advisors • Selected coursework
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 flex-1">
-            {/* Degree cards */}
-            <div className="xl:col-span-2 space-y-4">
-              {edu.map((e, i) => (
-                <div key={i} className="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-                    <div>
-                      <h3 className="text-base font-black text-slate-900">{e.degree}</h3>
-                      <p className="text-xs font-bold text-indigo-600">{e.org}</p>
-                      {e.focus && (
-                        <p className="text-[11px] text-slate-500 font-medium mt-2">
-                          <span className="font-black text-slate-700">Focus:</span> {e.focus}
-                        </p>
-                      )}
-                      {e.extra && (
-                        <p className="text-[11px] text-slate-400 font-medium mt-1 italic">{e.extra}</p>
-                      )}
-                    </div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest shrink-0">{e.date}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Coursework sidebar */}
-            <div className="xl:col-span-1">
-              <div className="p-6 bg-white border border-slate-100 rounded-2xl shadow-sm sticky top-24">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                  <FileText size={14} className="text-indigo-600" /> Selected Coursework
-                </h3>
-                <ul className="space-y-3 text-sm text-slate-600 font-medium leading-relaxed">
-                  {coursework.map((c, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <ChevronDot /> {c}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PageShell>
-    </PageWrapper>
+        </ul>
+      </div>
+    </Page>
   );
 }
 
 /* =========================
-   UI HELPERS
+   RESEARCH
    ========================= */
 
-function SectionTitle({ icon, children }) {
+function Research() {
   return (
-    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-l-4 border-indigo-600 pl-4 mb-6 flex items-center gap-2">
-      {icon} {children}
-    </h3>
-  );
-}
+    <Page>
+      <h2 className="font-serif text-4xl md:text-5xl mb-4" style={{ color: "var(--ink)" }}>
+        Research
+      </h2>
+      <p className="font-serif text-xl leading-relaxed mb-16 max-w-3xl" style={{ color: "var(--ink-soft)" }}>
+        Four threads of my current work. Each addresses a distinct failure mode in modern LLMs applied to structured tasks.
+      </p>
 
-function ChevronDot() {
-  return (
-    <span className="mt-1 inline-flex items-center justify-center w-4 h-4 rounded-full bg-indigo-50 border border-indigo-100 shrink-0">
-      <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
-    </span>
-  );
-}
-
-function IconTag({ icon, label }) {
-  return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl text-xs font-black text-slate-500 border border-slate-100">
-      {icon} {label}
-    </div>
-  );
-}
-
-function SkillBox({ cat, items }) {
-  return (
-    <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
-      <h4 className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2">{cat}</h4>
-      <div className="flex flex-wrap gap-1">
-        {items.map((it) => (
-          <span key={it} className="text-[10px] font-bold text-slate-500">{it} •</span>
+      <div className="space-y-16">
+        {research.map((r, i) => (
+          <article key={i} className="grid grid-cols-1 md:grid-cols-[80px_1fr] gap-6 md:gap-10">
+            <div className="font-mono text-sm pt-1" style={{ color: "var(--ink-faint)" }}>
+              {String(i + 1).padStart(2, "0")}
+            </div>
+            <div>
+              <h3 className="font-serif text-2xl mb-3" style={{ color: "var(--ink)" }}>
+                {r.title}
+              </h3>
+              <p className="text-[15px] leading-[1.75] max-w-3xl" style={{ color: "var(--ink-soft)" }}>
+                {r.body}
+              </p>
+            </div>
+          </article>
         ))}
       </div>
-    </div>
+    </Page>
   );
 }
 
-function SocialBtn({ href, icon }) {
+/* =========================
+   PUBLICATIONS
+   ========================= */
+
+function Publications() {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 hover:text-indigo-600 transition-all shadow-sm"
-    >
-      {React.cloneElement(icon, { size: 18 })}
-    </a>
+    <Page>
+      <h2 className="font-serif text-4xl md:text-5xl mb-4" style={{ color: "var(--ink)" }}>
+        Publications
+      </h2>
+      <p className="text-sm mb-16" style={{ color: "var(--ink-faint)" }}>
+        For PDFs and code not linked here, please email me directly.
+      </p>
+
+      <div className="space-y-20">
+        {publications.map((group) => (
+          <section key={group.section}>
+            <SectionLabel>{group.section}</SectionLabel>
+            <ul>
+              {group.items.map((p, i) => (
+                <li
+                  key={i}
+                  className="py-6 border-t"
+                  style={{ borderColor: "var(--rule)" }}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-[60px_1fr] gap-2 md:gap-8">
+                    <div className="font-mono text-sm pt-1" style={{ color: "var(--ink-faint)" }}>
+                      {p.year}
+                    </div>
+                    <div>
+                      {p.authors && (
+                        <p className="text-[14px] mb-1.5" style={{ color: "var(--ink-soft)" }}>
+                          {p.authors.map((a, ai) => (
+                            <span key={ai}>
+                              {a === ME ? (
+                                <span style={{ color: "var(--ink)", fontWeight: 600 }}>{a}</span>
+                              ) : (
+                                a
+                              )}
+                              {ai < p.authors.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </p>
+                      )}
+                      <p className="font-serif text-xl leading-snug mb-2" style={{ color: "var(--ink)" }}>
+                        {p.title}
+                      </p>
+                      <p className="text-[15px] italic" style={{ color: "var(--ink-soft)" }}>
+                        {p.venue}
+                        {p.status && (
+                          <span className="not-italic" style={{ color: "var(--ink-faint)" }}>
+                            {" "}· {p.status}
+                          </span>
+                        )}
+                      </p>
+                      {p.links && p.links.length > 0 && (
+                        <div className="mt-3 flex gap-5 text-sm">
+                          {p.links.map((l, li) => (
+                            <a
+                              key={li}
+                              href={l.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 hover:opacity-70"
+                              style={{ color: "var(--accent)" }}
+                            >
+                              {l.label} <ArrowUpRight size={13} />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </Page>
+  );
+}
+
+/* =========================
+   CV (combines Experience + Education)
+   ========================= */
+
+function CV() {
+  return (
+    <Page>
+      <div className="flex items-baseline justify-between flex-wrap gap-4 mb-16">
+        <h2 className="font-serif text-4xl md:text-5xl" style={{ color: "var(--ink)" }}>
+          Curriculum Vitae
+        </h2>
+        {/* Drop your CV PDF into /public and link it here */}
+        <a
+          href="/cv.pdf"
+          className="text-sm inline-flex items-center gap-1 hover:opacity-70"
+          style={{ color: "var(--accent)" }}
+        >
+          Download PDF <ArrowUpRight size={14} />
+        </a>
+      </div>
+
+      <section className="mb-20">
+        <SectionLabel>Experience</SectionLabel>
+        <ul>
+          {experience.map((e, i) => (
+            <li
+              key={i}
+              className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-3 md:gap-10 py-8 border-t"
+              style={{ borderColor: "var(--rule)" }}
+            >
+              <div className="font-mono text-sm pt-1" style={{ color: "var(--ink-faint)" }}>
+                {e.date}
+              </div>
+              <div>
+                <h3 className="font-serif text-xl mb-1" style={{ color: "var(--ink)" }}>
+                  {e.role}
+                </h3>
+                <p className="text-sm mb-3" style={{ color: "var(--ink-soft)" }}>
+                  {e.org}
+                </p>
+                <p className="text-[15px] leading-[1.75] max-w-3xl" style={{ color: "var(--ink-soft)" }}>
+                  {e.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <SectionLabel>Education</SectionLabel>
+        <ul>
+          {education.map((e, i) => (
+            <li
+              key={i}
+              className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-3 md:gap-10 py-8 border-t"
+              style={{ borderColor: "var(--rule)" }}
+            >
+              <div className="font-mono text-sm pt-1" style={{ color: "var(--ink-faint)" }}>
+                {e.date}
+              </div>
+              <div>
+                <h3 className="font-serif text-xl mb-1" style={{ color: "var(--ink)" }}>
+                  {e.degree}
+                </h3>
+                <p className="text-sm mb-3" style={{ color: "var(--ink-soft)" }}>
+                  {e.org}
+                </p>
+                {e.note && (
+                  <p className="text-[15px] leading-[1.75] max-w-3xl" style={{ color: "var(--ink-soft)" }}>
+                    {e.note}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </Page>
   );
 }
